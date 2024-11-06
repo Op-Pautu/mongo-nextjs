@@ -1,21 +1,70 @@
-import { Button } from "./ui/button";
+"use client";
 
-export const EditTopicForm = () => {
+import { useState } from "react";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+
+interface EditTopicFormProps {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export const EditTopicForm = ({
+  id,
+  title,
+  description,
+}: EditTopicFormProps) => {
+  const [newTitle, setNewTitle] = useState(title);
+  const [newDescription, setNewDescription] = useState(description);
+
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_LOCAL_URL}/api/topics/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ newTitle, newDescription }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to update topic");
+      }
+      router.refresh();
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <form className="flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <input
+        onChange={(e) => setNewTitle(e.target.value)}
+        value={newTitle}
+        className="border border-slate-500 px-8 py-2"
         type="text"
         placeholder="Topic Title"
-        className="border border-slate-500 px-8 py-2"
       />
+
       <input
+        onChange={(e) => setNewDescription(e.target.value)}
+        value={newDescription}
+        className="border border-slate-500 px-8 py-2"
         type="text"
         placeholder="Topic Description"
-        className="border border-slate-500 px-8 py-2"
       />
-      <Button className="bg-green-600 font-bold text-white py-3 px-6 w-fit rounded-none">
+
+      <button className="bg-green-600 font-bold text-white py-3 px-6 w-fit">
         Update Topic
-      </Button>
+      </button>
     </form>
   );
 };

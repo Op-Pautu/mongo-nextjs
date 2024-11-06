@@ -10,14 +10,12 @@ interface IParams {
 
 export async function PUT(req: NextResponse, { params }: IParams) {
   const { id } = params;
-
-  const { title, description } = await req.json();
-
+  const { newTitle: title, newDescription: description } = await req.json();
   await dbConnect();
 
   await Topic.findByIdAndUpdate(id, { title, description });
 
-  return NextResponse.json({ message: "Topic updated" });
+  return NextResponse.json({ message: "Topic updated" }, { status: 200 });
 }
 
 export async function GET(req: NextResponse, { params }: IParams) {
