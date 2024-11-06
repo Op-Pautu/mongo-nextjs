@@ -1,5 +1,6 @@
 import { Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { DeleteButton } from "./delete-button";
 
 interface Topic {
   _id: string;
@@ -38,7 +39,7 @@ export const TopicsList = async () => {
             <p>{topic.description}</p>
           </div>
           <div className="flex gap-2">
-            <Trash2 size={24} className="text-red-400" />
+            <DeleteButton id={topic._id} />
             <Link href={`/edit-topic/${topic._id}`}>
               <Edit size={24} />
             </Link>
