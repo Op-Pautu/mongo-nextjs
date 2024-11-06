@@ -1,6 +1,6 @@
 import dbConnect from "@/lib/mongodb";
 import { Topic } from "@/models/Topic";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 interface IParams {
   params: {
@@ -8,7 +8,7 @@ interface IParams {
   };
 }
 
-export async function PUT(req: NextResponse, { params }: IParams) {
+export async function PUT(req: NextRequest, { params }: IParams) {
   const { id } = params;
   const { newTitle: title, newDescription: description } = await req.json();
   await dbConnect();
@@ -18,7 +18,7 @@ export async function PUT(req: NextResponse, { params }: IParams) {
   return NextResponse.json({ message: "Topic updated" }, { status: 200 });
 }
 
-export async function GET(req: NextResponse, { params }: IParams) {
+export async function GET(req: NextRequest, { params }: IParams) {
   const { id } = params;
 
   await dbConnect();
